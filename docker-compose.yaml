@@ -1,0 +1,67 @@
+version: "3.2"
+# SSH private key for access to ims-tracker must under the path $HOME/.ssh/id_rsa
+
+services:
+  ims-tracker:
+    image: isprocompany/ims-tracker-runtime:v1.0.0
+    volumes:
+      - type: volume
+        source: ims-tracker-sources
+        target: /usr/local/grails238/:z
+    ports:
+      - "$GRAILS_PORT:$GRAILS_PORT"
+    env_file:
+     - ims-tracker.env
+    environment:
+      GRAILS_ENV: $GRAILS_ENV
+      GRAILS_PORT: $GRAILS_PORT
+    restart: unless-stopped
+    depends_on:
+      - git-sync
+      - database
+
+  git-sync:
+    image: gcr.io/google_containers/git-sync:v2.0.4
+    env_file:
+     - ims-tracker.env
+    environment:
+      GIT_SYNC_REPO: "git@bitbucket.org:ispro_company/ims-tracker.git"
+      GIT_SYNC_DEST: "ims-tracker"
+      GIT_SYNC_ROOT: "/git"
+      GIT_SYNC_ONE_TIME: "true"
+      GIT_SYNC_DEPTH: 1
+      GIT_SYNC_SSH: "true"
+    user: root
+    volumes:
+      - type: volume
+        source: ims-tracker-sources
+        target: /git:z
+      - type: bind
+        source: $HOME/.ssh/id_rsa
+        target: /etc/git-secret/ssh
+      - type: bind
+        source: $HOME/.ssh/id_rsa
+        target: /root/ssh/id_rsa
+
+  database:
+    image: postgres:9.6.4
+    volumes:
+      - $PWD/database-persistence:/var/lib/postgresql/data 
+      # # Uncomment to mount ims-tracker sample data, that will be loaded at start by the database
+      # - type: volume
+      #   source: database-dump
+      #   target: /docker-entrypoint-initdb.d/dump.sql:z
+    restart: unless-stopped
+    env_file:
+     - ims-tracker.env
+
+  # # Uncomment to download container with ims-tracker sample database data
+  # database-volume:
+  #   image: isprocompany/ims-tracker-database-volume:latest
+  #   volumes:
+  #     - type: volume
+  #       source: database-dump
+  #       target: /artefact:z
+
+volumes:
+  ims-tracker-sources:
