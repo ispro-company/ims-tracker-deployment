@@ -16,6 +16,7 @@ This deployment process:
 File `ims-tracker.env` contains variables that need to be set prior to successful deployment. Database credentials needs to be the same as configured in ims-tracker.
 
 ## Running
+
 To start the deployment process and launch ims-tracker on port `9090` using grails environment `test`: 
 
 ~~~
@@ -26,14 +27,17 @@ To stop the deployment run:
 ~~~
 GRAILS_PORT=9090 GRAILS_ENV=test docker-compose down -v
 ~~~
+
 ## Debugging
+
 You can attach to ims-tracker application logs:
+
 ~~~
-docker logs -f  dockerdeploy_ims-tracker_1
+docker logs -f imstrackerdeployment_ims-tracker_1
 ~~~
 
 or enter the container directly:
 
 ~~~
-docker exec -it dockerdeploy_ims-tracker_1 bash
+docker exec -it imstrackerdeployment_ims-tracker_1 bash
 ~~~
