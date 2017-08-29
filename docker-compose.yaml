@@ -8,6 +8,9 @@ services:
       - type: volume
         source: ims-tracker-sources
         target: /usr/local/grails238/:z
+      - type: volume
+        source: $PWD/attachements
+        target: /attachements
     ports:
       - "$GRAILS_PORT:$GRAILS_PORT"
     env_file:
