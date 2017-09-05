@@ -58,6 +58,17 @@ services:
     env_file:
      - ims-tracker.env
 
+  phppgadmin:
+    image: fizix/docker-pgadmin:php-fpm-environment
+    environment:
+      - POSTGRESQL_HOST=database
+      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_DEFAULT_DB=postgres
+    ports:
+      - 5201:80
+    depends_on:
+      - database
+
   # # Uncomment to download container with ims-tracker sample database data
   # database-volume:
   #   image: isprocompany/ims-tracker-database-volume:latest
