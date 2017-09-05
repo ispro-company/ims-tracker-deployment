@@ -28,6 +28,14 @@ To stop the deployment run:
 GRAILS_PORT=9090 GRAILS_ENV=test docker-compose down -v
 ~~~
 
+## Data Persistence
+Upon starting there will be two directories created on the host filesystem:
+
+- `$PWD/attachments` where tracker attachments are stored
+- `$PWD/data-persistence` - where Postgres database is stored
+
+Thanks to that, you can remove or restart the containers without loosing the state of the application.
+
 ## Debugging
 
 You can attach to ims-tracker application logs:
